@@ -46,3 +46,28 @@ validation <- temp %>%
 removed <- anti_join(temp, validation)
 edx <- rbind(edx, removed)
 rm(dl, ratings, movies, test_index, temp, movielens, removed)
+
+#### Methods and Analysis ####
+
+### Data Analysis ###
+
+# Head
+head(edx) %>%
+  print.data.frame()
+
+# Total unique movies and users
+summary(edx)
+
+# Number of unique movies and users in the edx dataset 
+edx %>%
+  summarize(n_users = n_distinct(userId), 
+            n_movies = n_distinct(movieId))
+
+# Ratings distribution
+edx %>%
+  ggplot(aes(rating)) +
+  geom_histogram(binwidth = 0.25, color = "black") +
+  scale_x_discrete(limits = c(seq(0.5,5,0.5))) +
+  scale_y_continuous(breaks = c(seq(0, 3000000, 500000))) +
+  ggtitle("Rating distribution")
+
