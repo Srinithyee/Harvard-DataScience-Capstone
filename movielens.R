@@ -71,3 +71,48 @@ edx %>%
   scale_y_continuous(breaks = c(seq(0, 3000000, 500000))) +
   ggtitle("Rating distribution")
 
+# Plot number of ratings per movie
+edx %>%
+  count(movieId) %>%
+  ggplot(aes(n)) +
+  geom_histogram(bins = 30, color = "black") +
+  scale_x_log10() +
+  xlab("Number of ratings") +
+  ylab("Number of movies") +
+  ggtitle("Number of ratings per movie")
+
+
+# Table 20 movies rated only once
+edx %>%
+  group_by(movieId) %>%
+  summarize(count = n()) %>%
+  filter(count == 1) %>%
+  left_join(edx, by = "movieId") %>%
+  group_by(title) %>%
+  summarize(rating = rating, n_rating = count) %>%
+  slice(1:20) %>%
+  knitr::kable()
+
+
+# Plot number of ratings given by users
+edx %>%
+  count(userId) %>%
+  ggplot(aes(n)) +
+  geom_histogram(bins = 30, color = "black") +
+  scale_x_log10() +
+  xlab("Number of ratings") + 
+  ylab("Number of users") +
+  ggtitle("Number of ratings given by users")
+
+# Plot mean movie ratings given by users
+edx %>%
+  group_by(userId) %>%
+  filter(n() >= 100) %>%
+  summarize(b_u = mean(rating)) %>%
+  ggplot(aes(b_u)) +
+  geom_histogram(bins = 30, color = "black") +
+  xlab("Mean rating") +
+  ylab("Number of users") +
+  ggtitle("Mean movie ratings given by users") +
+  scale_x_discrete(limits = c(seq(0.5,5,0.5))) +
+  theme_light()
