@@ -116,3 +116,14 @@ edx %>%
   ggtitle("Mean movie ratings given by users") +
   scale_x_discrete(limits = c(seq(0.5,5,0.5))) +
   theme_light()
+### Modelling Approach ###
+
+## Average movie rating model ##
+
+# Compute the dataset's mean rating
+mu <- mean(edx$rating)
+mu
+
+# Test results based on simple prediction
+naive_rmse <- RMSE(validation$rating, mu)
+naive_rmse
