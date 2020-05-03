@@ -127,3 +127,19 @@ mu
 # Test results based on simple prediction
 naive_rmse <- RMSE(validation$rating, mu)
 naive_rmse
+
+# Check results
+# Save prediction in data frame
+rmse_results <- data_frame(method = "Average movie rating model", RMSE = naive_rmse)
+rmse_results %>% knitr::kable()
+
+## Movie effect model ##
+
+# Simple model taking into account the movie effect b_i
+# Subtract the rating minus the mean for each rating the movie received
+# Plot number of movies with the computed b_i
+movie_avgs <- edx %>%
+  group_by(movieId) %>%
+  summarize(b_i = mean(rating - mu))
+movie_avgs %>% qplot(b_i, geom ="histogram", bins = 10, data = ., color = I("black"),
+                     ylab = "Number of movies", main = "Number of movies with the computed b_i")
