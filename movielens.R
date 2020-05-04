@@ -143,3 +143,12 @@ movie_avgs <- edx %>%
   summarize(b_i = mean(rating - mu))
 movie_avgs %>% qplot(b_i, geom ="histogram", bins = 10, data = ., color = I("black"),
                      ylab = "Number of movies", main = "Number of movies with the computed b_i")
+
+# Test and save rmse results 
+predicted_ratings <- mu +  validation %>%
+  left_join(movie_avgs, by='movieId') %>%
+  pull(b_i)
+model_1_rmse <- RMSE(predicted_ratings, validation$rating)
+rmse_results <- bind_rows(rmse_results,
+                          data_frame(method="Movie effect model",  
+                                     RMSE = model_1_rmse ))
