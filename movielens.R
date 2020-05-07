@@ -152,3 +152,37 @@ model_1_rmse <- RMSE(predicted_ratings, validation$rating)
 rmse_results <- bind_rows(rmse_results,
                           data_frame(method="Movie effect model",  
                                      RMSE = model_1_rmse ))
+
+# Check results
+rmse_results %>% knitr::kable()
+
+## Movie and user effect model ##
+
+# Plot penaly term user effect #
+user_avgs<- edx %>% 
+  left_join(movie_avgs, by='movieId') %>%
+  group_by(userId) %>%
+  filter(n() >= 100) %>%
+  summarize(b_u = mean(rating - mu - b_i))
+user_avgs%>% qplot(b_u, geom ="histogram", bins = 30, data = ., color = I("black"))
+
+
+user_avgs <- edx %>%
+left_join(movie_avgs, by='movieId') %>%
+group_by(userId) %>%
+summarize(b_u = mean(rating - mu - b_i))
+                                                             
+
+# Test and save rmse results 
+predicted_ratings <- validation%>%
+left_join(movie_avgs, by='movieId') %>%
+left_join(user_avgs, by='userId') %>%
+mutate(pred = mu + b_i + b_u) %>%
+pull(pred)
+                                                             
+model_2_rmse <- RMSE(predicted_ratings, validation$rating)
+rmse_results <- bind_rows(rmse_results,
+data_frame(method="Movie and user effect model",  
+RMSE = model_2_rmse))
+
+
