@@ -185,4 +185,39 @@ rmse_results <- bind_rows(rmse_results,
 data_frame(method="Movie and user effect model",  
 RMSE = model_2_rmse))
 
+# Check result
+rmse_results %>% knitr::kable()
+                                                             
+## Regularized movie and user effect model ##
+
+# lambda is a tuning parameter
+# Use cross-validation to choose it.
+lambdas <- seq(0, 10, 0.25)
+
+
+# For each lambda,find b_i & b_u, followed by rating prediction & testing
+# note:the below code could take some time  
+rmses <- sapply(lambdas, function(l){
+                                                               
+mu <- mean(edx$rating)
+ 
+b_i <- edx %>% 
+group_by(movieId) %>%
+summarize(b_i = sum(rating - mu)/(n()+l))
+                                                               
+b_u <- edx %>% 
+left_join(b_i, by="movieId") %>%
+group_by(userId) %>%
+summarize(b_u = sum(rating - b_i - mu)/(n()+l))
+                                                               
+predicted_ratings <- 
+validation %>% 
+left_join(b_i, by = "movieId") %>%
+left_join(b_u, by = "userId") %>%
+mutate(pred = mu + b_i + b_u) %>%
+pull(pred)
+                                                               
+return(RMSE(predicted_ratings, validation$rating))
+})
+                                               
 
