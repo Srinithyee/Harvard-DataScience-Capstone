@@ -219,5 +219,21 @@ pull(pred)
                                                                
 return(RMSE(predicted_ratings, validation$rating))
 })
-                                               
+
+# Plot rmses vs lambdas to select the optimal lambda                                                             
+qplot(lambdas, rmses)  
+                                                             
+                                                             
+# The optimal lambda                                                             
+lambda <- lambdas[which.min(rmses)]
+lambda
+                                                            
+# Test and save results                                                             
+rmse_results <- bind_rows(rmse_results,
+data_frame(method="Regularized movie and user effect model",  
+RMSE = min(rmses)))
+
+# Check result
+rmse_results %>% knitr::kable()
+                                   
 
