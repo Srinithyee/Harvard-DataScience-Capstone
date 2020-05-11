@@ -235,5 +235,13 @@ RMSE = min(rmses)))
 
 # Check result
 rmse_results %>% knitr::kable()
-                                   
+                                  
+#### Results ####                                                            
+# RMSE results overview                                                          
+rmse_results %>% knitr::kable()
+
+#### Appendix ####
+print("Operating System:")
+version
+
 
