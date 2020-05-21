@@ -116,7 +116,7 @@ edx %>%
   ggtitle("Mean movie ratings given by users") +
   scale_x_discrete(limits = c(seq(0.5,5,0.5))) +
   theme_light()
-### Modelling Approach ###
+#### Modelling Approach ####
 
 ## Average movie rating model ##
 
